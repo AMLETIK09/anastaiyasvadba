@@ -1,7 +1,6 @@
-// --- ФАЙЛ script.js (ИСПРАВЛЕННАЯ ВЕРСИЯ) ---
+// --- ФАЙЛ script.js (ВЕРСИЯ ДЛЯ VERCEL) ---
 
 document.addEventListener('DOMContentLoaded', () => {
-
     // --- Анимация появления блоков при скролле ---
     const animatedElements = document.querySelectorAll('.fade-in-up');
 
@@ -17,13 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
             rootMargin: '0px 0px -100px 0px'
         });
 
-        animatedElements.forEach(el => {
-            observer.observe(el);
-        });
+        animatedElements.forEach(el => observer.observe(el));
     } else {
-        animatedElements.forEach(el => {
-            el.classList.add('is-visible');
-        });
+        animatedElements.forEach(el => el.classList.add('is-visible'));
     }
 
     // --- Таймер обратного отсчета ---
@@ -53,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCountdown();
     }
 
-    // --- Отправка формы RSVP в Telegram ---
+    // --- Отправка формы RSVP в Telegram через Vercel API ---
     const rsvpForm = document.getElementById('rsvp-form');
     if (rsvpForm) {
         rsvpForm.addEventListener('submit', async function (e) {
@@ -64,28 +59,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const attendance = data.get('attendance');
             const guests = data.get('guests') || '1';
             const comment = data.get('comment') || 'Нет комментария';
+
             const statusMessage = document.getElementById('status-message');
             statusMessage.innerText = "Отправка данных...";
             statusMessage.style.color = "#555";
+
             const message = `🎉 Новая RSVP заявка:\n\n👤 Имя: ${name}\n✅ Придёт: ${attendance}\n👥 Гостей: ${guests}\n💬 Комментарий: ${comment}`;
-            const telegramBotToken = "8217528198:AAFezaVAIcstdbnnTMtmy-svsBMFlrmz1uQ";
-            const chatId = "-1002983591748";
+
             try {
-                const response = await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+                const response = await fetch("https://anastaiyasvadba.vercel.app/api/send", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        text: message
-                    })
+                    body: JSON.stringify({ text: message })
                 });
+
                 if (response.ok) {
                     statusMessage.innerText = "Спасибо! Ваш ответ отправлен 💌";
                     statusMessage.style.color = "green";
                     form.reset();
                 } else {
                     const errorData = await response.json();
-                    throw new Error(errorData.description || 'Ошибка сервера');
+                    throw new Error(errorData.error || 'Ошибка сервера');
                 }
             } catch (error) {
                 console.error('Ошибка отправки:', error);
@@ -94,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    
+
     // --- Персонализированное приветствие ---
     function getNameFromURL() {
         const params = new URLSearchParams(window.location.search);
@@ -139,9 +133,4 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.addEventListener('click', startMusic);
         document.body.addEventListener('touchstart', startMusic);
     }
-
 });
-
-
-
-
