@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = `🎉 Новая RSVP заявка:\n\n👤 Имя: ${name}\n✅ Придёт: ${attendance}\n👥 Гостей: ${guests}\n💬 Комментарий: ${comment}`;
 
             try {
-                const response = await fetch("/api/send.js", {
+                const response = await fetch("/api/send", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text: message })
@@ -134,4 +134,5 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.addEventListener('touchstart', startMusic);
     }
 });
+
 
